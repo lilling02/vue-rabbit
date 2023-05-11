@@ -7,6 +7,9 @@ import { getCategory } from '@/apis/testAPI';
 import App from './App.vue'
 import router from './router'
 
+// 引入初始化文件
+import "@/styles/common.scss"
+
 async function testAPI(params) {
     let result = await getCategory()
     console.log(result.data)
