@@ -7,6 +7,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue(),
@@ -25,9 +26,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // 2. 自动导入定制化的全局样式
-        additionalData: `@use"@/styles/element/index.scss"as*`
-      }
-    }
+        additionalData: `@use "@/styles/element/index.scss" as *;`,
+      },
+    },
   }
 })
