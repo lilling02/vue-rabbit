@@ -11,8 +11,8 @@ import router from './router'
 import "@/styles/common.scss"
 
 async function testAPI(params) {
-    let result = await getCategory()
-    console.log(result.data)
+  let result = await getCategory()
+  console.log(result.data)
 }
 
 testAPI()
