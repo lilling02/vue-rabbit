@@ -14,12 +14,20 @@ export default defineConfig({
     resolvers: [ElementPlusResolver()],
   }),
   Components({
-    resolvers: [ElementPlusResolver()],
+    resolvers: [ElementPlusResolver({ importStyle: 'sass' })],
   }),
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 2. 自动导入定制化的全局样式
+        additionalData: `@use"@/styles/element/index.scss"as*`
+      }
     }
   }
 })
