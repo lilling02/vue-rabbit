@@ -1,19 +1,22 @@
 <script setup>
 import { getCategoryAPI } from '@/apis/layout.js'
 import { onMounted, ref } from 'vue'
+import { useCategoryStore } from '@/stores/category'
 
+
+// 23/5/12 目前已经交由pinia来管理这些数据
 // category
-let categoryList = ref([])      // 存储分类数据的数组
-async function getCategory() {  //获取分类数据的方法
-    let result = await getCategoryAPI()
-    if (result.status == 200) {
-        categoryList.value = result.data.result
-    } else { console.error('getCategory,error') }
-    console.log(result);
-}
-getCategory()
+// let categoryList = ref([])      // 存储分类数据的数组
+// async function getCategory() {  //获取分类数据的方法
+//     let result = await getCategoryAPI()
+//     if (result.status == 200) {
+//         categoryList.value = result.data.result
+//     } else { console.error('getCategory,error') }
+//     console.log(result);
+// }
+// getCategory()
 
-
+const categoryStore = useCategoryStore()
 
 </script>
 
@@ -24,7 +27,7 @@ getCategory()
                 <RouterLink to="/">小兔鲜</RouterLink>
             </h1>
             <ul class="app-header-nav">
-                <li :class="{ home: categoryList[0] === category }" v-for="category in categoryList" :key="category.id">
+                <li class="home" v-for="category in categoryStore.categoryList" :key="category.id">
                     <RouterLink to="/">{{ category.name }}</RouterLink>
                 </li>
 
