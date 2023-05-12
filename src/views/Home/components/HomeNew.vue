@@ -24,8 +24,6 @@ async function getHot() {  //获取分类数据的方法
 }
 onMounted(() => {
     getHot()
-    console.log('hotList', hotList);
-
 })
 </script>
 
