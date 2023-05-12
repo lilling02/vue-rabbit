@@ -2,9 +2,7 @@
 import { useCategoryStore } from '@/stores/category.js'
 
 const categoryStore = useCategoryStore();
-console.log(categoryStore.categoryList);
 </script>
-
 <template>
     <div class="home-category">
         <ul class="menu">
