@@ -1,11 +1,10 @@
 import axios from 'axios';
 
-// 根据vite 的模式判断是否是开发环境
-const isDev = import.meta.env.DEV;
-console.log(isDev);
+// 根据目前是开发环境还是生产环境来配置不同的baseURL
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 const request = axios.create({
-    baseURL: 'http://pcapi-xiaotuxian-front-devtest.itheima.net',
+    baseURL,
     timeout: 5000
 });
 
@@ -25,6 +24,12 @@ request.interceptors.request.use(config => {
 // 响应拦截器
 request.interceptors.response.use(response => {
     // 对响应数据做点什么
+
+    // 如果返回值的code是401直接跳转到登录页面
+    if (response.data.code === 401) {
+        window.location.href = '/login';
+    }
+
     return response;
 }
     , error => {
