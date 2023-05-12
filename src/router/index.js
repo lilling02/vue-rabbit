@@ -12,7 +12,7 @@ const router = createRouter({
       name: 'laout',
       component: Laout,
       children: [{
-        path: '/home',
+        path: '/home||/',
         name: 'home',
         component: Home
       }, {
