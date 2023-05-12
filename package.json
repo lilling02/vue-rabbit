@@ -10,7 +10,10 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "axios": "^1.4.0",
+    "element-plus": "^2.3.4",
     "pinia": "^2.0.35",
+    "unplugin-element-plus": "^0.7.1",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
@@ -20,6 +23,9 @@
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
     "jsdom": "^22.0.0",
+    "sass": "^1.62.1",
+    "unplugin-auto-import": "^0.15.3",
+    "unplugin-vue-components": "^0.24.1",
     "vite": "^4.3.4",
     "vitest": "^0.31.0"
   }

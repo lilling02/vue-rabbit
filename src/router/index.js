@@ -1,22 +1,32 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-
+import Login from '@/views/Login/index.vue'
+import Laout from '@/views/Layout/index.vue'
+import Home from '@/views/Home/index.vue'
+import Category from '@/views/Category/index.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // 配置路径和组件对应关系的位置
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      name: 'laout',
+      component: Laout,
+      children: [{
+        path: '/home',
+        name: 'home',
+        component: Home
+      }, {
+        path: '/category',
+        name: 'category',
+        component: Category
+      }]
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+
   ]
 })
 
