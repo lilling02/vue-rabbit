@@ -16,7 +16,7 @@ export const lazyPlugin = {
             {
                 root: null, // 要监听的根元素 默认是视窗
                 rootMargin: '0px', // 根元素外边距
-                threshold: 1,   // 交叉比例0-1
+                threshold: 0,   // 交叉比例0-1
             }
         )
         app.directive('img-lazy', {
