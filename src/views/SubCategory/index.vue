@@ -1,5 +1,28 @@
 <script setup>
+import { ref, onMounted } from 'vue'
+import { getCategoryFilterAPI } from '@/apis/category.js'
+import { useRoute } from 'vue-router'
+import GoodsItems from '@/views/Home/components/GoodsItems.vue'
 
+const route = useRoute()
+
+const categoryDate = ref({})
+
+async function getCategoryDate(id) {
+    let result = await getCategoryFilterAPI(id)
+    if (result.status == 200) {
+        categoryDate.value = result.data.result
+        console.log(categoryDate.value);
+    } else {
+        console.error('getCategory,error')
+        // 为了防止路由参数错误,重定向到首页
+        router.replace('/')
+    }
+}
+
+onMounted(() => {
+    getCategoryDate(route.params.id)
+})
 
 </script>
 
@@ -9,9 +32,9 @@
         <div class="bread-container">
             <el-breadcrumb separator=">">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item :to="{ path: '/' }">居家
+                <el-breadcrumb-item :to="{ path: `/category/${categoryDate.parentId}` }">{{ categoryDate.name }}
                 </el-breadcrumb-item>
-                <el-breadcrumb-item>居家生活用品</el-breadcrumb-item>
+                <el-breadcrumb-item>{{ categoryDate.name }}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="sub-container">
@@ -22,6 +45,7 @@
             </el-tabs>
             <div class="body">
                 <!-- 商品列表-->
+                <GoodsItems v-for="good in categoryDate.goods" :good="good"></GoodsItems>
             </div>
         </div>
     </div>

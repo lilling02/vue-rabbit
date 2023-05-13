@@ -14,3 +14,20 @@ export function getBannerAPI(params = {}) {
     let { distributionSite = "1" } = params
     return request({ url: "/home/banner", params: { distributionSite }, method: "get" })
 }
+
+
+/**
+ * @description: 获取二级分类列表数据
+ * @param {*} id 分类id
+ * @return {*}
+ */
+
+export const getCategoryFilterAPI = (id) => {
+    return request({
+        url: '/category/sub/filter',
+        params: {
+            id
+        },
+        method: 'get'
+    })
+}
