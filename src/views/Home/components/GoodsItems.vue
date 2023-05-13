@@ -1,10 +1,11 @@
 <script setup>
-defineProps([{
+defineProps({
     good: {
-        type: Array,
-        default: () => []
+        type: Object,
+        required: true
     }
-}])
+})
+
 </script>
 
 <template>
@@ -18,7 +19,7 @@ defineProps([{
     </RouterLink>
 </template>
 
-<style lang='less' scoped>
+<style lang='scss' scoped>
 .goods-item {
     display: block;
     width: 220px;

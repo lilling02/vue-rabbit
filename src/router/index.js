@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/Login/index.vue'
-import Laout from '@/views/Layout/index.vue'
+import Layout from '@/views/Layout/index.vue'
 import Home from '@/views/Home/index.vue'
 import Category from '@/views/Category/index.vue'
 const router = createRouter({
@@ -9,14 +9,14 @@ const router = createRouter({
     // 配置路径和组件对应关系的位置
     {
       path: '/',
-      name: 'laout',
-      component: Laout,
+      name: 'Layout',
+      component: Layout,
       children: [{
-        path: '/home||/',
+        path: '',
         name: 'home',
         component: Home
       }, {
-        path: '/category',
+        path: '/category/:id',
         name: 'category',
         component: Category
       }]
