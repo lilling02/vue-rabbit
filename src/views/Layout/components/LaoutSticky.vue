@@ -7,6 +7,7 @@ const { y } = useScroll(window)
 
 
 const categoryStore = useCategoryStore()
+
 </script>
 
 <template>
@@ -16,7 +17,8 @@ const categoryStore = useCategoryStore()
             <!-- 导航区域 -->
             <ul class="app-header-nav ">
                 <li class="home" v-for="category in categoryStore.categoryList" :key="category.id">
-                    <RouterLink to="/">{{ category.name }}</RouterLink>
+                    <!-- <RouterLink active-class="active" to="/">{{ category.name }}</RouterLink>   -->
+                    <RouterLink active-class="active" :to="`/category/${category.id}`">{{ category.name }}</RouterLink>
                 </li>
             </ul>
 

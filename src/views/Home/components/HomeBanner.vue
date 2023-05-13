@@ -1,10 +1,19 @@
 <script setup>
 import { getBannerAPI } from '@/apis/layout';
 import { onMounted, ref } from 'vue';
+
+// 广告区域展示位置(投放位置 投放位置,1为首页,2为分类商品页) 默认是1
+const props = defineProps({
+    distributionSite: {
+        type: String,
+        default: "1"
+    }
+})
+
 // 获取轮播图的数据
 const bannerList = ref([]);
 async function getBanner() {  //获取分类数据的方法
-    let result = await getBannerAPI()
+    let result = await getBannerAPI({ distributionSite: props.distributionSite })
     if (result.status == 200) {
         bannerList.value = result.data.result
     } else { console.error('getCategory,error') }

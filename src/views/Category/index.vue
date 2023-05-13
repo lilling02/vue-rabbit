@@ -2,7 +2,8 @@
 import { getCategoryAPI } from '@/apis/category.js'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-
+import GoodsItems from '@/views/Home/components/GoodsItems.vue'
+import HomeBanner from '@/views/Home/components/HomeBanner.vue'
 // 获取路由参数
 const route = useRoute()
 
@@ -13,7 +14,6 @@ async function getCategory() {
     if (result.status == 200) {
         categoryData.value = result.data.result
     } else { console.error('getCategory,error') }
-    console.log(result);
 }
 onMounted(() => {
     getCategory()
@@ -30,7 +30,28 @@ onMounted(() => {
                     <el-breadcrumb-item>{{ categoryData.name }}</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
+            <HomeBanner distributionSite="2" class="banner"></HomeBanner>
+            <div class="sub-list">
+                <h3>全部分类</h3>
+                <ul>
+                    <li v-for="i in categoryData.children" :key="i.id">
+                        <RouterLink to="/">
+                            <img :src="i.picture" />
+                            <p>{{ i.name }}</p>
+                        </RouterLink>
+                    </li>
+                </ul>
+            </div>
+            <div class="ref-goods" v-for="item in categoryData.children" :key="item.id">
+                <div class="head">
+                    <h3>- {{ item.name }}-</h3>
+                </div>
+                <div class="body">
+                    <GoodsItems v-for="good in item.goods" :good="good" :key="good.id" />
+                </div>
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -111,6 +132,11 @@ onMounted(() => {
 
     .bread-container {
         padding: 25px 0;
+    }
+
+    .banner {
+        position: relative !important;
+        margin: 0 auto !important;
     }
 }
 </style>
