@@ -15,16 +15,7 @@ onMounted(() => {
     getNew()
 })
 
-const hotList = ref([]);
-async function getHot() {  //获取分类数据的方法
-    let result = await findHotAPI()
-    if (result.status == 200) {
-        hotList.value = result.data.result
-    } else { console.error('getCategory,error') }
-}
-onMounted(() => {
-    getHot()
-})
+
 </script>
 
 <template>
@@ -36,18 +27,6 @@ onMounted(() => {
                     <img :src="item.picture" alt="" />
                     <p class="name">{{ item.name }}</p>
                     <p class="price">&yen;{{ item.price }}</p>
-                </RouterLink>
-            </li>
-        </ul>
-
-    </HomePanel>
-    <HomePanel title="人气推荐" sub-title="新鲜出炉,品质靠谱">
-        <ul class="goods-list">
-            <li v-for="item in hotList" :key="item.id">
-                <RouterLink to="/">
-                    <img v-img-lazy="item.picture" :alt="item.alt" />
-                    <p class="name">{{ item.name }}</p>
-                    <p class="price">{{ item.title }}</p>
                 </RouterLink>
             </li>
         </ul>

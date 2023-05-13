@@ -41,3 +41,10 @@ export const findHotAPI = () => {
         method: 'get'
     })
 }
+
+// 获取product
+export const getGoodsAPI = () => {
+    return request({
+        url: '/home/goods'
+    })
+}

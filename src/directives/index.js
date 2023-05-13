@@ -3,6 +3,22 @@ export const lazyPlugin = {
     install(app) {
         // 懒加载指令逻辑
         // 定义全局指令
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(element => {
+                    const { isIntersecting, target } = element
+                    if (isIntersecting) {
+                        target.src = target.dataset.url
+                        observer.unobserve(target)
+                    }
+                });
+            },
+            {
+                root: null, // 要监听的根元素 默认是视窗
+                rootMargin: '0px', // 根元素外边距
+                threshold: 1,   // 交叉比例0-1
+            }
+        )
         app.directive('img-lazy', {
 
             mounted(el, binding) {
@@ -22,22 +38,7 @@ export const lazyPlugin = {
                 //         }
                 //     }
                 // )
-
-                const observer = new IntersectionObserver(
-                    (entries) => {
-                        console.log(entries[0].isIntersecting);
-                        if (entries[0].isIntersecting) {
-                            el.src = binding.value
-                            observer.disconnect() // 这里不适用unobserve是因为我的写法里面一次只会监听一张图片只有一张图片
-                        }
-                    },
-                    {
-                        root: null, // 要监听的根元素 默认是视窗
-                        rootMargin: '0px', // 根元素外边距
-                        threshold: 1,   // 交叉比例0-1
-                    }
-                )
-
+                el.dataset.url = binding.value
                 observer.observe(el) // 将当前元素加入监听
             }
         })
