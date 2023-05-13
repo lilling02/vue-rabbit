@@ -1,36 +1,9 @@
 <script setup>
-import { getCategoryAPI } from '@/apis/category.js'
-import { onMounted, ref } from 'vue'
-import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 import GoodsItems from '@/views/Home/components/GoodsItems.vue'
 import HomeBanner from '@/views/Home/components/HomeBanner.vue'
-// 获取路由参数
-const route = useRoute()
+import { useCategory } from './composables/useCategory.js'
 
-
-const categoryData = ref({})
-async function getCategory(id = route.params.id) {
-    let result = await getCategoryAPI(id)
-    if (result.status == 200) {
-        categoryData.value = result.data.result
-    } else {
-        console.error('getCategory,error')
-        // 为了防止路由参数错误,重定向到首页
-        router.replace('/')
-    }
-}
-onMounted(() => {
-    getCategory()
-})
-
-
-// 我们期望在路由参数变化的时候cong重新获取数据
-// 重用的组件里调用 beforeRouteUpdate
-
-onBeforeRouteUpdate((to, from, next) => {
-    getCategory(to.params.id)
-    next()
-})
+const { categoryData } = useCategory()
 </script>
 
 <template>
