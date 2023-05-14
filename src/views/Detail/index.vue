@@ -1,7 +1,8 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { getDetail } from '@/apis/detail'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted } from 'vue'
+import DetailHot from './components/DetailHot.vue'
 
 const route = useRoute()
 const id = route.params.id
@@ -9,7 +10,6 @@ const id = route.params.id
 const detail = ref({})
 const getDetailData = async () => {
     const res = await getDetail(id)
-    console.log(res.data.result, 'res')
     detail.value = res.data.result
 }
 
@@ -17,9 +17,7 @@ onMounted(() => {
     getDetailData()
 })
 
-watch(detail, (newVal) => {
-    console.log(newVal.categories[0].id)
-})
+
 </script>
 
 <template>
@@ -117,19 +115,22 @@ watch(detail, (newVal) => {
                                 <div class="goods-detail">
                                     <!-- 属性 -->
                                     <ul class="attrs">
-                                        <li v-for="item in detail.details.properties" :key="item.name">
+                                        <li v-for="item in detail.details?.properties" :key="item.name">
                                             <span class="dt">{{ item.name }}</span>
                                             <span class="dd">{{ item.value }}</span>
                                         </li>
                                     </ul>
                                     <!-- 图片 -->
-                                    <img v-img-lazy="item" v-for="item in detail.details.pictures" :key="item" />
+                                    <img v-img-lazy="item" v-for="item in detail.details?.pictures" :key="item" />
                                 </div>
                             </div>
                         </div>
                         <!-- 24热榜+专题推荐 -->
                         <div class="goods-aside">
-
+                            <!-- 天 -->
+                            <DetailHot :type=1 />
+                            <!-- 周 -->
+                            <DetailHot :type=2 />
                         </div>
                     </div>
                 </div>
