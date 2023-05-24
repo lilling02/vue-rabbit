@@ -1,13 +1,24 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useMouseInElement } from '@vueuse/core'
+
+
+// 通过props 从父组件传递过来的数据
+defineProps({
+    imageList: {
+        type: Array,
+        default: () => []
+    }
+})
+
 // 图片列表
-const imageList = [
-    "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
-    "https://yanxuan-item.nosdn.127.net/e801b9572f0b0c02a52952b01adab967.jpg",
-    "https://yanxuan-item.nosdn.127.net/b52c447ad472d51adbdde1a83f550ac2.jpg",
-    "https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg",
-    "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
-]
+// const imageList = [
+//     "https://yanxuan-item.nosdn.127.net/d917c92e663c5ed0bb577c7ded73e4ec.png",
+//     "https://yanxuan-item.nosdn.127.net/e801b9572f0b0c02a52952b01adab967.jpg",
+//     "https://yanxuan-item.nosdn.127.net/b52c447ad472d51adbdde1a83f550ac2.jpg",
+//     "https://yanxuan-item.nosdn.127.net/f93243224dc37674dfca5874fe089c60.jpg",
+//     "https://yanxuan-item.nosdn.127.net/f881cfe7de9a576aaeea6ee0d1d24823.jpg"
+// ]
 
 // TODO:点击小图展示对应的大图
 // 拿到小图目前展示的图片的index
@@ -16,6 +27,45 @@ const activeIndex = ref(0)
 function enterHandler(i) {
     activeIndex.value = i
 }
+
+
+// 制作放大镜效果
+const target = ref(null)
+const layer = ref(null)
+const { x, y, elementX, elementY, isOutside } = useMouseInElement(target)
+
+const layerStyle = computed(() => {
+    if (layer.value) {
+        // 计算滑块的位置
+        let left = elementX.value - layer.value.offsetWidth / 2
+        let top = elementY.value - layer.value.offsetHeight / 2
+
+        // 边界检测
+        if (left < 0) {
+            left = 0
+        } else if (left > target.value.offsetWidth - layer.value.offsetWidth) {
+            left = target.value.offsetWidth - layer.value.offsetWidth
+        }
+
+        if (top < 0) {
+            top = 0
+        } else if (top > target.value.offsetHeight - layer.value.offsetHeight) {
+            top = target.value.offsetHeight - layer.value.offsetHeight
+        }
+
+        return {
+            left,
+            top
+        }
+    } else {
+        return {
+            left: 0,
+            top: 0
+        }
+    }
+})
+
+
 </script>
 
 
@@ -25,7 +75,10 @@ function enterHandler(i) {
         <div class="middle" ref="target">
             <img :src="imageList[activeIndex]" alt="" />
             <!-- 蒙层小滑块 -->
-            <div class="layer" :style="{ left: `0px`, top: `0px` }"></div>
+            <div class="layer" ref="layer" :style="{
+                left: `${layerStyle.left}px`, top: `${layerStyle.top}px`, display: `${isOutside ? 'none' : 'block'}`
+            }">
+            </div>
         </div>
         <!-- 小图列表 -->
         <ul class="small">
@@ -36,11 +89,11 @@ function enterHandler(i) {
         <!-- 放大镜大图 -->
         <div class="large" :style="[
             {
-                backgroundImage: `url(${imageList[0]})`,
-                backgroundPositionX: `0px`,
-                backgroundPositionY: `0px`,
+                backgroundImage: `url(${imageList[activeIndex]})`,
+                backgroundPositionX: `${-2 * layerStyle.left}px`,
+                backgroundPositionY: `${-2 * layerStyle.top}px`,
             },
-        ]" v-show="false"></div>
+        ]" v-show="!isOutside"></div>
     </div>
 </template>
 

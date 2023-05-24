@@ -1,10 +1,10 @@
 # 记录那些坑人玩意
 
-## 2023/5/11 第一坑 
+## 2023/5/11 第一坑
 
-在vue的模板代码里面一直都会自动引入一个basecss，就是这个基础的css文件我们会经常忘记导致会出现各种各样的样式问题
+在vue的模板代码里面一直都会自动引入一个basecss,就是这个基础的css文件我们会经常忘记导致会出现各种各样的样式问题
 
-##### main.js:
+##### main.js
 
 ```` js
 import './assets/main.css' // 就是他 记得每次遇见他给删了
@@ -24,4 +24,3 @@ app.use(createPinia())
 app.use(router)
 app.mount('#app')
 ````
-

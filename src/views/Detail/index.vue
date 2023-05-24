@@ -14,6 +14,10 @@ const getDetailData = async () => {
     detail.value = res.data.result
 }
 
+// sku被操作时候
+const skuChange = function (sku) {
+    console.log(sku);
+}
 onMounted(() => {
     getDetailData()
 })
@@ -45,7 +49,7 @@ onMounted(() => {
                     <div class="goods-info">
                         <div class="media">
                             <!-- 图片预览区 -->
-                            <ImageView />
+                            <ImageView :image-list="detail.mainPictures" />
                             <!-- 统计数量 -->
                             <ul class="goods-sales">
                                 <li>
@@ -94,7 +98,7 @@ onMounted(() => {
                                 </dl>
                             </div>
                             <!-- sku组件 -->
-
+                            <XtxSku :goods="detail" @change="skuChange" />
                             <!-- 数据组件 -->
 
                             <!-- 按钮组件 -->

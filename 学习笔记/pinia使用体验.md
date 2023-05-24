@@ -1,8 +1,8 @@
-# pinia使用体验（关于写法）
+# pinia使用体验(关于写法)
 
-关于如果安装pinia 就不说了，直接去看[文档](https://pinia.vuejs.org/zh/getting-started.html)。我们这里只聊代码部分。
+关于如果安装pinia 就不说了,直接去看[文档](https://pinia.vuejs.org/zh/getting-started.html).我们这里只聊代码部分.
 
-pinia文档中是有这么一个例子：
+pinia文档中是有这么一个例子:
 
 ```` js
 import { ref, computed } from 'vue'
@@ -17,7 +17,7 @@ export const useCounterStore = defineStore('counter', () => {
 })
 ````
 
-而对于使用pinia有这样一个例子：
+而对于使用pinia有这样一个例子:
 
 ```` js
 import {useCounterStore} from './stores/counter'
@@ -29,7 +29,7 @@ const CounterStore = useCounterStore() // 1.获取pinia对象
 <div>{{ CounterStore.doubleCount }}</div>
 ````
 
-> 我们可以看到，其实在pinia中写代码 和在vue的sfc中写脚本的方式基本上一模一样，可以说***基本没有什么心智负担***。
+> 我们可以看到,其实在pinia中写代码 和在vue的sfc中写脚本的方式基本上一模一样,可以说***基本没有什么心智负担***.
 
 ## 异步action
 
@@ -52,14 +52,16 @@ export const useCounterStore = defineStore('counter', ()=>{
     const res = await axios.get(API_URL)
     list.value = res.data.data.channels
   }
-  
+
   return {
     list,
     loadList
   }
 })
 ```
+
 2- 组件中调用action
+
 ```vue
 <script setup>
   import { useCounterStore } from '@/stores/counter'
@@ -74,7 +76,9 @@ export const useCounterStore = defineStore('counter', ()=>{
   </ul>
 </template>
 ```
-# storeToRefs保持响应式解构
+
+## storeToRefs保持响应式解构
+>
 > 直接基于store进行解构赋值,响应式数据(state和getter)会丢失响应式特性,使用storeToRefs辅助保持响应式
 
 ```vue
@@ -105,12 +109,12 @@ const {count,doubleCount} = consterStore
 
 而如果你想要既要结构赋值又要保存响应式
 
-解决方案：
+解决方案:
 
 ``` js
 // 解决结构赋值导致的响应式丢失
 const {count,doubleCount} = storeToRefs(consterStore)
 ```
 
-> 原因：直接结构赋值得到的是值，而加上storeToRefs是得到一个响应式对象
-> ***如果是方法的话***，可以直接结构赋值不用加storeToRefs
+> 原因:直接结构赋值得到的是值,而加上storeToRefs是得到一个响应式对象
+> ***如果是方法的话***,可以直接结构赋值不用加storeToRefs
