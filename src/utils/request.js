@@ -1,5 +1,7 @@
 import axios from 'axios';
-
+import { ElMessage } from 'element-plus';
+import 'element-plus/theme-chalk/el-message.css'
+import { useRouter } from 'vue-router'
 // 根据目前是开发环境还是生产环境来配置不同的baseURL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -33,7 +35,11 @@ request.interceptors.response.use(response => {
     return response;
 }
     , error => {
-        // 对响应错误做点什么
+        // TODO : 跳出错误提示,提示用户
+        ElMessage({
+            type: 'warning',
+            message: error.response.data.msg,
+        })
         return Promise.reject(error);
     }
 );
