@@ -1,9 +1,10 @@
 <script setup>
 import { ref, reactive } from 'vue'
-import { loginApi } from '@/apis/user.js'
+import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
-import 'element-plus/theme-chalk/el-message.css'
 import { useRouter } from 'vue-router'
+import 'element-plus/theme-chalk/el-message.css'
+
 // useRouter 是获取路由器实例对象,更注重与路由相关的功能
 // useRoute 是获取当前路由对象,更注重与路由相关的数据
 const router = useRouter()
@@ -37,7 +38,7 @@ const rules = reactive({
 const formRef = ref(null);
 const doLogin = () => {
     const { account, password } = form.value;
-
+    const { userInfo, getUserInfo } = useUserStore();
 
     // 调用实例的方法 校验表单
     formRef.value.validate(async (valid) => {
@@ -45,19 +46,15 @@ const doLogin = () => {
         if (valid) {
             // 校验成功
             console.log('校验成功')
-
-            // 4. 校验成功后,调用登录接口
-            const result = await loginApi({ account, password });
-            if (result.status === 200) {
-                // 提示用户登录成功
-                ElMessage({
-                    type: 'success',
-                    message: '登录成功'
-                })
-                // 跳转到首页
-                router.replace({ path: '/' })
-            }
-            console.log(result);
+            // 4. 校验成功后,调用登录接口(Pinia里面的action)
+            await getUserInfo({ account, password })
+            // 提示用户登录成功
+            ElMessage({
+                type: 'success',
+                message: '登录成功'
+            })
+            // 跳转到首页
+            router.replace({ path: '/' })
         } else {
             // 校验失败
             console.log('校验失败')
