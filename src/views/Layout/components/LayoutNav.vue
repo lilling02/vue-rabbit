@@ -1,8 +1,17 @@
 <script setup>
 import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
+// 1.获取用户信息
+const { userInfo, clearUserInfo } = useUserStore()
+const router = useRouter()
+// 2. TODO: 点击按钮退出登录 并且清空用户信息
+const confirm = () => { // 这是点退出登录按钮的回调函数
 
-// 获取用户信息
-const { userInfo } = useUserStore()
+    // 2.1 清空用户信息
+    clearUserInfo()
+    // 2.2 跳转到登录页
+    router.push('/login')
+}
 </script>
 
 <template>
@@ -13,7 +22,7 @@ const { userInfo } = useUserStore()
                 <template v-if="userInfo.token">
                     <li><a href="javascript:;"><i class=" iconfont icon-user"></i>{{ userInfo.account }}</a></li>
                     <li>
-                        <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+                        <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="confirm">
                             <template #reference>
                                 <a href="javascript:;">退出登录</a>
                             </template>

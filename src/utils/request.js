@@ -21,7 +21,6 @@ request.interceptors.request.use(config => {
     const { userInfo } = useUserStore();
     if (userInfo.token) {
         config.headers.Authorization = 'Bearer ' + userInfo.token;
-        console.log(config.headers.Authorization);
     }
     return config;
 }

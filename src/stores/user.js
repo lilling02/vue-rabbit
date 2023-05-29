@@ -16,9 +16,18 @@ export const useUserStore = defineStore('user', () => {
         const result = await loginApi(data);
         userInfo.value = result.data.result;
     }
+
+    // 4.退出登录删除数据的方法
+    const clearUserInfo = () => {
+        // 4.1 清空用户数据
+        userInfo.value = {}
+    }
+
+    // 3. 返回数据
     return {
         userInfo,
-        getUserInfo
+        getUserInfo,
+        clearUserInfo
     }
 }, {
     persist: true,
