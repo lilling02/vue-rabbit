@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import 'element-plus/theme-chalk/el-message.css'
-import { useRouter } from 'vue-router'
+import router from '@/router/index.js'
 import { useUserStore } from '@/stores/user.js'
 // 根据目前是开发环境还是生产环境来配置不同的baseURL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -34,11 +34,6 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => {
     // 对响应数据做点什么
 
-    // 如果返回值的code是401直接跳转到登录页面
-    if (response.data.code === 401) {
-        window.location.href = '/login';
-    }
-
     return response;
 }
     , error => {
@@ -47,6 +42,17 @@ request.interceptors.response.use(response => {
             type: 'warning',
             message: error.response.data.msg,
         })
+
+        // TODO : 如果响应状态码是401,就清除数据并且跳转到登录页面
+        if (error.response.status === 401) {
+            // 清除数据
+            const { clearUserInfo } = useUserStore();
+            clearUserInfo();
+
+            // 跳转到登录页面
+            router.push('/login');
+        }
+
         return Promise.reject(error);
     }
 );
