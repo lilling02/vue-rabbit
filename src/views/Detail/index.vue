@@ -4,10 +4,13 @@ import { getDetail } from '@/apis/detail'
 import { ref, onMounted } from 'vue'
 import DetailHot from './components/DetailHot.vue'
 import ImageView from '@/components/imageView/index.vue'
+import { ElMessage } from 'element-plus'
+import { useCartStore } from '@/stores/cartStore'
 
 const route = useRoute()
 const id = route.params.id
 
+// 获取当前商品的详情
 const detail = ref({})
 const getDetailData = async () => {
     const res = await getDetail(id)
@@ -15,7 +18,9 @@ const getDetailData = async () => {
 }
 
 // sku被操作时候
+const skuObj = ref({})
 const skuChange = function (sku) {
+    skuObj.value = sku
     console.log(sku);
 }
 onMounted(() => {
@@ -23,6 +28,33 @@ onMounted(() => {
 })
 
 
+// 购买商品数量相关的数据以及操作
+const count = ref(1)
+const countChange = (newCount) => {
+    count.value = newCount
+    console.log('count.value', count.value);
+    console.log('newCount', newCount);
+}
+
+// 将物品加入购物车的方法
+const cartStore = useCartStore()
+const addCart = () => {
+    // 1. 判断是否已经选择了商品的规格,如果有则添加没有则提示
+    if (skuObj.value.skuId) {
+        // 2. 调用pinia仓库的暴露的api添加商品
+        cartStore.addCart({
+            id: detail.value.id,
+            name: detail.value.name,
+            price: detail.value.price,
+            count: count.value,
+            skuId: skuObj.value.skuId,
+            attrsTest: skuObj.value.attrsTest,
+            selected: true
+        })
+    } else {
+        ElMessage.warning('请选择规格')
+    }
+}
 </script>
 
 <template>
@@ -100,10 +132,10 @@ onMounted(() => {
                             <!-- sku组件 -->
                             <XtxSku :goods="detail" @change="skuChange" />
                             <!-- 数据组件 -->
-
+                            <el-input-number v-model="count" @change="countChange" />
                             <!-- 按钮组件 -->
                             <div>
-                                <el-button size="large" class="btn">
+                                <el-button size="large" class="btn" @click="addCart">
                                     加入购物车
                                 </el-button>
                             </div>
