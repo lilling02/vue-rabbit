@@ -2,7 +2,7 @@
 import { getCategoryAPI } from '@/apis/layout.js'
 import { onMounted, ref } from 'vue'
 import { useCategoryStore } from '@/stores/category'
-
+import HeaderCart from './HeaderCart.vue'
 
 // 23/5/12 目前已经交由pinia来管理这些数据
 // category
@@ -37,7 +37,7 @@ const categoryStore = useCategoryStore()
                 <input type="text" placeholder="搜一搜">
             </div>
             <!-- 头部购物车 -->
-
+            <HeaderCart></HeaderCart>
         </div>
     </header>
 </template>

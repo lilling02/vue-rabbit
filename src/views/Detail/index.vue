@@ -45,6 +45,7 @@ const addCart = () => {
         cartStore.addCart({
             id: detail.value.id,
             name: detail.value.name,
+            picture: detail.value.mainPictures[0],
             price: detail.value.price,
             count: count.value,
             skuId: skuObj.value.skuId,
