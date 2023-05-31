@@ -3,7 +3,7 @@ import { useCartStore } from '@/stores/cartStore';
 
 // TODO 从 store 中获取购物车数据 并渲染到页面上
 // 1. 从store中获取购物车数据
-const { cartList, delCart } = useCartStore();
+const { cartList, delCart, allCount, allPrice } = useCartStore();
 
 </script>
 
@@ -35,8 +35,8 @@ const { cartList, delCart } = useCartStore();
             </div>
             <div class="foot">
                 <div class="total">
-                    <p>共 10 件商品</p>
-                    <p>&yen; 100.00 </p>
+                    <p>共 {{ allCount }} 件商品</p>
+                    <p>&yen; {{ allPrice }} </p>
                 </div>
                 <el-button size="large" type="primary">去购物车结算</el-button>
             </div>

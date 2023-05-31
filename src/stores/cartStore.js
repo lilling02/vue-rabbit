@@ -2,10 +2,10 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-05-31 21:31:03
+ * @Last Modified time: 2023-05-31 21:58:43
  * @description: 购物车数据仓库
  */
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 
@@ -39,10 +39,25 @@ export const useCartStore = defineStore('cart', () => {
         const newCaerList = cartList.value.filter(item => item.skuId !== skuId)
         cartList.value = newCaerList
     }
+    // 4.通过pinia的getter获取state
+
+    const allCount = computed(() => {
+        return cartList.value.reduce((total, item) => total + item.count, 0) // reduce 第一个参数是回调函数,它的返回值是累加的结果
+    })
+
+    /**
+     * @description: 计算总价格
+     */
+    const allPrice = computed(() => {
+        return cartList.value.reduce((total, item) => total + item.count * item.price, 0)
+    })
+
     return {
         cartList,
         addCart,
-        delCart
+        delCart,
+        allCount,
+        allPrice
     }
 }, {
     persist: true,
