@@ -5,6 +5,7 @@ import Home from '@/views/Home/index.vue'
 import Category from '@/views/Category/index.vue'
 import SubCatogory from '@/views/SubCategory/index.vue'
 import Detail from '@/views/Detail/index.vue'
+import CartList from '@/views/CartList/index.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,7 +41,11 @@ const router = createRouter({
       name: 'login',
       component: Login
     },
-
+    {
+      path: '/cartlist',
+      name: 'cartlist',
+      component: CartList
+    }
   ],
   scrollBehavior(to, from, savedPosition) {
     return { top: 0 }
