@@ -3,7 +3,7 @@ import { useCartStore } from '@/stores/cartStore';
 
 // TODO 从 store 中获取购物车数据 并渲染到页面上
 // 1. 从store中获取购物车数据
-const { cartList } = useCartStore();
+const { cartList, delCart } = useCartStore();
 
 </script>
 
@@ -29,7 +29,7 @@ const { cartList } = useCartStore();
                             <p class="count">x{{ i.count }}</p>
                         </div>
                     </RouterLink>
-                    <i class="iconfont icon-close-new" @click="store.delCart(i.skuId)"></i>
+                    <i class="iconfont icon-close-new" @click="delCart(i.skuId)"></i>
                 </div>
 
             </div>

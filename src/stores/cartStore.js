@@ -2,7 +2,7 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-05-30 10:39:43
+ * @Last Modified time: 2023-05-31 21:31:03
  * @description: 购物车数据仓库
  */
 import { ref } from 'vue'
@@ -28,9 +28,21 @@ export const useCartStore = defineStore('cart', () => {
             cartList.value.push(goods)
         }
     }
+    // 3. 删除购物车商品的方法
+    const delCart = (skuId) => {
+        // 通过skuId找到对应的商品对象 -- 通过使用索引删除
+        // const index = cartList.value.findIndex((item) => item.skuId === skuId)
+        // 通过索引删除
+        // cartList.value.splice(index, 1)
+
+        // 通过filter过滤
+        const newCaerList = cartList.value.filter(item => item.skuId !== skuId)
+        cartList.value = newCaerList
+    }
     return {
         cartList,
-        addCart
+        addCart,
+        delCart
     }
 }, {
     persist: true,
