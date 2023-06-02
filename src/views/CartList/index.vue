@@ -1,5 +1,18 @@
 <script setup>
-// 
+import { useCartStore } from '@/stores/cartStore';
+// 1. 从pinia store 中获取购物车的数据
+const { cartList, allCount, selectedCount, selectedSkuPrice } = useCartStore();
+
+// 2. 写单选框选中时候的回调
+const singleChange = (skuId) => {
+    // // 2.1 修改pinia store中的数据 通过skuId找到对应的商品
+    // const item = cartList.find((i) => i.skuId === skuId);
+    // // 2.2 修改选中状态
+    // item.selected = !item.selected;
+
+    // 2.3 因为这是在修改pinia store中的数据 我们把方法写到了store中 直接调用store中的方法即可
+    useCartStore().singleChange(skuId);
+};
 </script>
 
 <template>
@@ -23,7 +36,7 @@
                     <tbody>
                         <tr v-for="i in cartList" :key="i.id">
                             <td>
-                                <el-checkbox />
+                                <el-checkbox :model-value="i.selected" @change="singleChange(i.skuId)" />
                             </td>
                             <td>
                                 <div class="goods">
@@ -71,8 +84,8 @@
             <!-- 操作栏 -->
             <div class="action">
                 <div class="batch">
-                    共 10 件商品,已选择 2 件,商品合计:
-                    <span class="red">¥ 200.00 </span>
+                    共 {{ allCount }} 件商品,已选择 {{ selectedCount }} 件,商品合计:
+                    <span class="red">¥ {{ selectedSkuPrice }} </span>
                 </div>
                 <div class="total">
                     <el-button size="large" type="primary">下单结算</el-button>

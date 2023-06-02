@@ -2,7 +2,7 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-05-31 21:58:43
+ * @Last Modified time: 2023-06-02 14:08:29
  * @description: 购物车数据仓库
  */
 import { ref, computed } from 'vue'
@@ -52,12 +52,37 @@ export const useCartStore = defineStore('cart', () => {
         return cartList.value.reduce((total, item) => total + item.count * item.price, 0)
     })
 
+    // 5. 单击修改商品的选择状态
+    const singleChange = (skuId) => {
+        // 2.1 修改pinia store中的数据 通过skuId找到对应的商品
+        const item = cartList.value.find((i) => i.skuId === skuId);
+        // 2.2 修改选中状态
+        item.selected = !item.selected;
+    };
+
+    // 6. 计算属性计算出已经选择的商品的数量
+    const selectedCount = computed(() => {
+        // 6.1 先筛选出cartlist里面已经选择了的sku
+        const selectedSku = cartList.value.filter((i) => i.selected)
+        return selectedSku.reduce((total, item) => total + item.count, 0)
+    })
+
+    // 7. 计算属性计算出已经选择的商品的价格
+    const selectedSkuPrice = computed(() => {
+        // 7.1 先筛选出cartlist里面已经选择了的sku
+        const selectedSku = cartList.value.filter((i) => i.selected)
+        // 7.2 累加已经选择的商品的价格
+        return selectedSku.reduce((total, item) => total + item.count * item.price, 0)
+    })
     return {
         cartList,
         addCart,
         delCart,
         allCount,
-        allPrice
+        allPrice,
+        singleChange,
+        selectedCount,
+        selectedSkuPrice
     }
 }, {
     persist: true,

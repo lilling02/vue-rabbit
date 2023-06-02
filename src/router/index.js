@@ -33,6 +33,11 @@ const router = createRouter({
         path: '/detail/:id',
         name: 'detail',
         component: Detail
+      },
+      {
+        path: '/cartlist',
+        name: 'cartlist',
+        component: CartList
       }
       ]
     },
@@ -40,11 +45,6 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
-    },
-    {
-      path: '/cartlist',
-      name: 'cartlist',
-      component: CartList
     }
   ],
   scrollBehavior(to, from, savedPosition) {
