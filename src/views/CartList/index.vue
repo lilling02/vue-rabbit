@@ -1,7 +1,7 @@
 <script setup>
 import { useCartStore } from '@/stores/cartStore';
 // 1. 从pinia store 中获取购物车的数据
-const { cartList, allCount, selectedCount, selectedSkuPrice } = useCartStore();
+const cartStore = useCartStore()
 
 // 2. 写单选框选中时候的回调
 const singleChange = (skuId) => {
@@ -11,8 +11,14 @@ const singleChange = (skuId) => {
     // item.selected = !item.selected;
 
     // 2.3 因为这是在修改pinia store中的数据 我们把方法写到了store中 直接调用store中的方法即可
-    useCartStore().singleChange(skuId);
+    cartStore.singleChange(skuId);
+
 };
+
+// 3. 全选功能的实现
+const allCheck = (selected) => {
+    cartStore.allCheck(selected)
+}
 </script>
 
 <template>
@@ -23,7 +29,7 @@ const singleChange = (skuId) => {
                     <thead>
                         <tr>
                             <th width="120">
-                                <el-checkbox />
+                                <el-checkbox :model-value="cartStore.isAll" @change="allCheck" />
                             </th>
                             <th width="400">商品信息</th>
                             <th width="220">单价</th>
@@ -34,7 +40,7 @@ const singleChange = (skuId) => {
                     </thead>
                     <!-- 商品列表 -->
                     <tbody>
-                        <tr v-for="i in cartList" :key="i.id">
+                        <tr v-for="i in cartStore.cartList" :key="i.id">
                             <td>
                                 <el-checkbox :model-value="i.selected" @change="singleChange(i.skuId)" />
                             </td>
@@ -68,7 +74,7 @@ const singleChange = (skuId) => {
                                 </p>
                             </td>
                         </tr>
-                        <tr v-if="cartList.length === 0">
+                        <tr v-if="cartStore.cartList.length === 0">
                             <td colspan="6">
                                 <div class="cart-none">
                                     <el-empty description="购物车列表为空">
@@ -84,8 +90,8 @@ const singleChange = (skuId) => {
             <!-- 操作栏 -->
             <div class="action">
                 <div class="batch">
-                    共 {{ allCount }} 件商品,已选择 {{ selectedCount }} 件,商品合计:
-                    <span class="red">¥ {{ selectedSkuPrice }} </span>
+                    共 {{ cartStore.allCount }} 件商品,已选择 {{ cartStore.selectedCount }} 件,商品合计:
+                    <span class="red">¥ {{ cartStore.selectedSkuPrice }} </span>
                 </div>
                 <div class="total">
                     <el-button size="large" type="primary">下单结算</el-button>

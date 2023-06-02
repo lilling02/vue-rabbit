@@ -2,12 +2,12 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-06-02 14:08:29
+ * @Last Modified time: 2023-06-02 15:42:22
  * @description: 购物车数据仓库
  */
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-
+import { getCartListAPI } from '@/apis/cartList'
 
 export const useCartStore = defineStore('cart', () => {
     // 1. 定义state - cartList
@@ -68,12 +68,15 @@ export const useCartStore = defineStore('cart', () => {
     })
 
     // 7. 计算属性计算出已经选择的商品的价格
-    const selectedSkuPrice = computed(() => {
-        // 7.1 先筛选出cartlist里面已经选择了的sku
-        const selectedSku = cartList.value.filter((i) => i.selected)
-        // 7.2 累加已经选择的商品的价格
-        return selectedSku.reduce((total, item) => total + item.count * item.price, 0)
-    })
+    const selectedSkuPrice = computed(() => cartList.value.filter((i) => i.selected).reduce((total, item) => total + item.count * item.price, 0))
+
+    // 全选功能action
+    const allCheck = (selected) => {
+        // 把cartList中的每一项的selected都设置为当前的全选框状态
+        cartList.value.forEach(item => item.selected = selected)
+    }
+    // 是否全选计算属性
+    const isAll = computed(() => cartList.value.every((item) => item.selected))
     return {
         cartList,
         addCart,
@@ -82,7 +85,9 @@ export const useCartStore = defineStore('cart', () => {
         allPrice,
         singleChange,
         selectedCount,
-        selectedSkuPrice
+        selectedSkuPrice,
+        allCheck,
+        isAll
     }
 }, {
     persist: true,
