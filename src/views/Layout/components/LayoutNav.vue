@@ -1,16 +1,25 @@
 <script setup>
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/cartStore'
 // 1.获取用户信息
 const { userInfo, clearUserInfo } = useUserStore()
 const router = useRouter()
+
+// 3. 获取购物车数据
+const cartStore = useCartStore()
+
 // 2. TODO: 点击按钮退出登录 并且清空用户信息
 const confirm = () => { // 这是点退出登录按钮的回调函数
 
     // 2.1 清空用户信息
     clearUserInfo()
+
     // 2.2 跳转到登录页
     router.push('/login')
+
+    // 2.3 清空本地购物车
+    cartStore.clearCart()
 }
 </script>
 

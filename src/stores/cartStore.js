@@ -2,7 +2,7 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-06-03 21:48:39
+ * @Last Modified time: 2023-06-03 22:00:09
  * @description: 购物车数据仓库
  */
 import { ref, computed } from 'vue'
@@ -80,8 +80,13 @@ export const useCartStore = defineStore('cart', () => {
             cartList.value = newCaerList
         }
     }
-    // 4.通过pinia的getter获取state
 
+    // 10. 清除购物车的方法 -- 退出登录的时候使用
+    const clearCart = () => {
+        cartList.value = []
+    }
+
+    // 4.通过pinia的getter获取统计数据
     const allCount = computed(() => {
         return cartList.value.reduce((total, item) => total + item.count, 0) // reduce 第一个参数是回调函数,它的返回值是累加的结果
     })
@@ -138,6 +143,7 @@ export const useCartStore = defineStore('cart', () => {
         delCart,
         singleChange,
         allCheck,
+        clearCart
     }
 }, {
     persist: true,
