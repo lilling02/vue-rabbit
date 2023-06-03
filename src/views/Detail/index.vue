@@ -42,7 +42,7 @@ const addCart = () => {
     // 1. 判断是否已经选择了商品的规格,如果有则添加没有则提示
     if (skuObj.value.skuId) {
         // 2. 调用pinia仓库的暴露的api添加商品
-        cartStore.addCart({
+        let result = cartStore.addCart({
             id: detail.value.id,
             name: detail.value.name,
             picture: detail.value.mainPictures[0],
@@ -52,6 +52,9 @@ const addCart = () => {
             attrsTest: skuObj.value.attrsTest,
             selected: true
         })
+        if (result) {
+            ElMessage.success('添加成功')
+        }
     } else {
         ElMessage.warning('请选择规格')
     }

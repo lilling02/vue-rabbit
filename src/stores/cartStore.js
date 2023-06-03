@@ -2,12 +2,12 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-06-02 23:29:22
+ * @Last Modified time: 2023-06-03 21:35:02
  * @description: 购物车数据仓库
  */
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { getCartListAPI, addCartAPI } from '@/apis/cartList'
+import { getCartListAPI, addCartAPI, delCartAPI } from '@/apis/cartList'
 import { useUserStore } from './user'
 
 export const useCartStore = defineStore('cart', () => {
@@ -28,9 +28,10 @@ export const useCartStore = defineStore('cart', () => {
             console.log('addCartResult', addCartResult);
             // 8.2.2 调用接口获取购物车列表
             let CartListResult = await getCartListAPI()
-            console.log('CartListResult', CartListResult);
             // 8.2.3 用购物车列表替换掉本地的购物车列表
             cartList.value = CartListResult.data.result
+            // 8.2.4 添加成功
+            return true
         } else {
             // 添加购物车操作-- 本地购物车逻辑
             // 已添加过 - count + 1
@@ -51,15 +52,31 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     // 3. 删除购物车商品的方法
-    const delCart = (skuId) => {
-        // 通过skuId找到对应的商品对象 -- 通过使用索引删除
-        // const index = cartList.value.findIndex((item) => item.skuId === skuId)
-        // 通过索引删除
-        // cartList.value.splice(index, 1)
+    const delCart = async (skuId) => {
+        // 9. 登录后的删除购物车逻辑
+        if (isLogin.value) {
+            // 9.1 调用删除购物车的接口
+            let result = await delCartAPI([skuId])
+            if (result.status === 200) {
+                // 9.2 调用接口获取购物车列表
+                let CartListResult = await getCartListAPI()
+                // 9.3 用购物车列表替换掉本地的购物车列表
+                cartList.value = CartListResult.data.result
+                // 9.4 删除成功
+                return true
+            }
+        } else {
+            // 本地购物车逻辑
 
-        // 通过filter过滤
-        const newCaerList = cartList.value.filter(item => item.skuId !== skuId)
-        cartList.value = newCaerList
+            // 通过skuId找到对应的商品对象 -- 通过使用索引删除
+            // const index = cartList.value.findIndex((item) => item.skuId === skuId)
+            // 通过索引删除
+            // cartList.value.splice(index, 1)
+
+            // 通过filter过滤
+            const newCaerList = cartList.value.filter(item => item.skuId !== skuId)
+            cartList.value = newCaerList
+        }
     }
     // 4.通过pinia的getter获取state
 

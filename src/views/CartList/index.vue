@@ -1,8 +1,8 @@
 <script setup>
 import { useCartStore } from '@/stores/cartStore';
+import { ElMessage } from 'element-plus';
 // 1. 从pinia store 中获取购物车的数据
 const cartStore = useCartStore()
-console.log('cartStore.selectedCount', cartStore.selectedCount);
 
 // 2. 写单选框选中时候的回调
 const singleChange = (skuId) => {
@@ -19,6 +19,15 @@ const singleChange = (skuId) => {
 // 3. 全选功能的实现
 const allCheck = (selected) => {
     cartStore.allCheck(selected)
+}
+
+// 4. 删除购物车商品
+const delCart = (i) => {
+    let result = cartStore.delCart(i.skuId)
+    if (result) {
+        // 调用element-ui的message提示
+        ElMessage.success('删除成功')
+    }
 }
 </script>
 
