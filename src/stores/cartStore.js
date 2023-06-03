@@ -2,32 +2,54 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-06-02 15:42:22
+ * @Last Modified time: 2023-06-02 23:29:22
  * @description: 购物车数据仓库
  */
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { getCartListAPI } from '@/apis/cartList'
+import { getCartListAPI, addCartAPI } from '@/apis/cartList'
+import { useUserStore } from './user'
 
 export const useCartStore = defineStore('cart', () => {
+    // 8.目前为止本地购物车能使用的逻辑操作都已经准备好了,接下来就是做登录状态下的分支判断,补充登录状态下的购物车逻辑
+    // 8.1 获取token好判断是否登录 这里方法很多,我们选择判断pinia 的 user 这个 store 里面是否存在useUserStore.userInfo.token这种方法
+    const userStore = useUserStore()
+    const isLogin = computed(() => userStore.userInfo.token)
+
     // 1. 定义state - cartList
     const cartList = ref([])
+
     // 2. 定义action - addCart
-    const addCart = (goods) => {
-        console.log('添加', goods)
-        // 添加购物车操作
-        // 已添加过 - count + 1
-        // 没有添加过 - 直接push
-        // 思路:通过匹配传递过来的商品对象中的skuId能不能在cartList中找到,找到了就是添加过
-        const item = cartList.value.find((item) => goods.skuId === item.skuId)
-        if (item) {
-            // 找到了
-            item.count++
+    const addCart = async (goods) => {
+        // 8.2 登录后的添加购物车逻辑
+        if (isLogin.value) {
+            // 8.2.1 调用接口加入购物车
+            let addCartResult = await addCartAPI(goods.skuId, goods.count)
+            console.log('addCartResult', addCartResult);
+            // 8.2.2 调用接口获取购物车列表
+            let CartListResult = await getCartListAPI()
+            console.log('CartListResult', CartListResult);
+            // 8.2.3 用购物车列表替换掉本地的购物车列表
+            cartList.value = CartListResult.data.result
         } else {
-            // 没找到
-            cartList.value.push(goods)
+            // 添加购物车操作-- 本地购物车逻辑
+            // 已添加过 - count + 1
+            // 没有添加过 - 直接push
+            // 思路:通过匹配传递过来的商品对象中的skuId能不能在cartList中找到,找到了就是添加过
+            const item = cartList.value.find((item) => goods.skuId === item.skuId)
+            if (item) {
+                // 找到了
+                item.count++
+            } else {
+                // 没找到
+                cartList.value.push(goods)
+            }
         }
+
+
+
     }
+
     // 3. 删除购物车商品的方法
     const delCart = (skuId) => {
         // 通过skuId找到对应的商品对象 -- 通过使用索引删除
@@ -77,17 +99,21 @@ export const useCartStore = defineStore('cart', () => {
     }
     // 是否全选计算属性
     const isAll = computed(() => cartList.value.every((item) => item.selected))
+
+
+
     return {
         cartList,
-        addCart,
-        delCart,
         allCount,
         allPrice,
-        singleChange,
         selectedCount,
         selectedSkuPrice,
+        isAll,
+        isLogin,
+        addCart,
+        delCart,
+        singleChange,
         allCheck,
-        isAll
     }
 }, {
     persist: true,

@@ -2,6 +2,7 @@
 import { useCartStore } from '@/stores/cartStore';
 // 1. 从pinia store 中获取购物车的数据
 const cartStore = useCartStore()
+console.log('cartStore.selectedCount', cartStore.selectedCount);
 
 // 2. 写单选框选中时候的回调
 const singleChange = (skuId) => {

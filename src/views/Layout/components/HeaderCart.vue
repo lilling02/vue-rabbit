@@ -3,19 +3,18 @@ import { useCartStore } from '@/stores/cartStore';
 
 // TODO 从 store 中获取购物车数据 并渲染到页面上
 // 1. 从store中获取购物车数据
-const { cartList, delCart, allCount, allPrice } = useCartStore();
-
+const cartStore = useCartStore();
 </script>
 
 <template>
     <div class="cart">
         <a class="curr" href="javascript:;">
-            <i class="iconfont icon-cart"></i><em>{{ cartList.length }}</em>
+            <i class="iconfont icon-cart"></i><em>{{ cartStore.cartList.length }}</em>
         </a>
         <div class="layer">
             <div class="list">
 
-                <div class="item" v-for="i in cartList" :key="i">
+                <div class="item" v-for="i in cartStore.cartList" :key="i">
                     <RouterLink to="">
                         <img :src="i.picture" alt="" />
                         <div class="center">
@@ -29,16 +28,16 @@ const { cartList, delCart, allCount, allPrice } = useCartStore();
                             <p class="count">x{{ i.count }}</p>
                         </div>
                     </RouterLink>
-                    <i class="iconfont icon-close-new" @click="delCart(i.skuId)"></i>
+                    <i class="iconfont icon-close-new" @click="cartStore.delCart(i.skuId)"></i>
                 </div>
 
             </div>
             <div class="foot">
                 <div class="total">
-                    <p>共 {{ allCount }} 件商品</p>
-                    <p>&yen; {{ allPrice }} </p>
+                    <p>共 {{ cartStore.allCount }} 件商品</p>
+                    <p>&yen; {{ cartStore.allPrice }} </p>
                 </div>
-                <el-button size="large" type="primary" @click="$router.push('cartlist')">去购物车结算</el-button>
+                <el-button size="large" type="primary" @click="$router.push('cartStore.cartList')">去购物车结算</el-button>
             </div>
         </div>
     </div>
