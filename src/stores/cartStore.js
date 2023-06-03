@@ -2,7 +2,7 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-06-03 21:35:02
+ * @Last Modified time: 2023-06-03 21:48:39
  * @description: 购物车数据仓库
  */
 import { ref, computed } from 'vue'
@@ -26,10 +26,8 @@ export const useCartStore = defineStore('cart', () => {
             // 8.2.1 调用接口加入购物车
             let addCartResult = await addCartAPI(goods.skuId, goods.count)
             console.log('addCartResult', addCartResult);
-            // 8.2.2 调用接口获取购物车列表
-            let CartListResult = await getCartListAPI()
-            // 8.2.3 用购物车列表替换掉本地的购物车列表
-            cartList.value = CartListResult.data.result
+            // 9.6 更新购物车列表
+            updateCartList()
             // 8.2.4 添加成功
             return true
         } else {
@@ -58,10 +56,14 @@ export const useCartStore = defineStore('cart', () => {
             // 9.1 调用删除购物车的接口
             let result = await delCartAPI([skuId])
             if (result.status === 200) {
-                // 9.2 调用接口获取购物车列表
-                let CartListResult = await getCartListAPI()
-                // 9.3 用购物车列表替换掉本地的购物车列表
-                cartList.value = CartListResult.data.result
+                // // 9.2 调用接口获取购物车列表
+                // let CartListResult = await getCartListAPI()
+                // // 9.3 用购物车列表替换掉本地的购物车列表
+                // cartList.value = CartListResult.data.result
+
+                // 9.6 更新购物车列表
+                updateCartList()
+
                 // 9.4 删除成功
                 return true
             }
@@ -117,6 +119,11 @@ export const useCartStore = defineStore('cart', () => {
     // 是否全选计算属性
     const isAll = computed(() => cartList.value.every((item) => item.selected))
 
+    // 9.5 因为删除和添加购物车都用到了一段重复的逻辑并且可能以后还要使用很多次,所以我们将他抽离出来
+    const updateCartList = async () => {
+        let CartListResult = await getCartListAPI()
+        cartList.value = CartListResult.data.result
+    }
 
 
     return {
