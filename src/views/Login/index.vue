@@ -3,6 +3,7 @@ import { ref, reactive } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { useCartStore } from '@/stores/cartStore'
 import 'element-plus/theme-chalk/el-message.css'
 
 // useRouter 是获取路由器实例对象,更注重与路由相关的功能
@@ -46,13 +47,20 @@ const doLogin = () => {
         if (valid) {
             // 校验成功
             console.log('校验成功')
+
             // 4. 校验成功后,调用登录接口(Pinia里面的action)
             await getUserInfo({ account, password })
+
+            // 5. 合并本地购物车
+            let cartStore = useCartStore()
+            cartStore.mergeCart()
+
             // 提示用户登录成功
             ElMessage({
                 type: 'success',
                 message: '登录成功'
             })
+
             // 跳转到首页
             router.replace({ path: '/' })
         } else {

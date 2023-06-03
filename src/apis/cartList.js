@@ -2,7 +2,7 @@
  * @Author: Codling 
  * @Date: 2023-06-02 14:35:42 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-06-03 21:19:47
+ * @Last Modified time: 2023-06-03 22:44:37
  * @Description 购物车的 api
  */
 import request from "@/utils/request";
@@ -31,3 +31,14 @@ export const addCartAPI = (skuId, count) => {
 export const delCartAPI = (ids) => {
     return request({ url: `/member/cart`, method: 'DELETE', data: { ids } })
 }
+
+/**
+ * 合并购物车API函数
+ * @function mergeCartAPI
+ * @param {Array<{skuId: string, selected: string, count: number}>} ids - skuId, selected 和 count 组成的对象数组
+ * @returns {Promise} 返回一个 Promise 对象,包含请求合并购物车接口后服务器返回的响应结果
+ */
+export const mergeCartAPI = (ids) => {
+    return request({ url: '/member/cart/merge', method: 'POST', data: { ids } })
+}
+

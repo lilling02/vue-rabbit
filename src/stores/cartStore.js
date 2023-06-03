@@ -2,12 +2,12 @@
  * @Author: Codling 
  * @Date: 2023-05-29 23:11:43 
  * @Last Modified by: Codling
- * @Last Modified time: 2023-06-03 22:00:09
+ * @Last Modified time: 2023-06-03 23:21:26
  * @description: 购物车数据仓库
  */
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { getCartListAPI, addCartAPI, delCartAPI } from '@/apis/cartList'
+import { getCartListAPI, addCartAPI, delCartAPI, mergeCartAPI } from '@/apis/cartList'
 import { useUserStore } from './user'
 
 export const useCartStore = defineStore('cart', () => {
@@ -130,6 +130,14 @@ export const useCartStore = defineStore('cart', () => {
         cartList.value = CartListResult.data.result
     }
 
+    // 11.合并本地购物车的方法
+    const mergeCart = async () => {
+        // 11.1 处理参数
+        let ids = cartList.value.map((item) => { return { skuId: item.skuId, selected: item.selected, count: item.count, } })
+
+        // 11.2 调用接口
+        await mergeCartAPI(ids)
+    }
 
     return {
         cartList,
@@ -143,7 +151,8 @@ export const useCartStore = defineStore('cart', () => {
         delCart,
         singleChange,
         allCheck,
-        clearCart
+        clearCart,
+        mergeCart
     }
 }, {
     persist: true,
