@@ -7,3 +7,14 @@ import request from "@/utils/request";
 export const getCheckoutInfoAPI = () => {
     return request({ url: '/member/order/pre', method: 'get' })
 }
+
+
+
+// 创建订单
+export const createOrderAPI = (data) => {
+    return request({
+        url: '/member/order',
+        method: 'POST',
+        data
+    })
+}
