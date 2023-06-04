@@ -1,6 +1,18 @@
 <script setup>
-const checkInfo = {}  // 订单对象
-const curAddress = {}  // 地址对象
+import { getCheckoutInfoAPI } from '@/apis/checkout'
+import { ref, onMounted, computed } from 'vue'
+const checkInfo = ref({})  // 订单对象
+const getCheckoutInfo = async () => {
+    let result = await getCheckoutInfoAPI()
+    checkInfo.value = result.data.result
+}
+onMounted(() => {
+    getCheckoutInfo()
+})
+
+const curAddress = computed(() => {
+    return checkInfo.value.userAddresses?.find((i) => i.isDefault)
+}) // 地址对象
 
 </script>
 
