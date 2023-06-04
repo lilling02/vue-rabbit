@@ -14,6 +14,19 @@ const curAddress = computed(() => {
     return checkInfo.value.userAddresses?.find((i) => i.isDefault)
 }) // 地址对象
 
+// 2. 控制选择地址的弹窗
+const toggleFlag = ref(false)
+const addFlag = ref(false)
+
+// 3. switchUserAddresses 切换默认地址
+const activeAddress = ref({})
+const switchUserAddresses = (item) => {
+    activeAddress.value = item
+    checkInfo.value.userAddresses.forEach((i) => {
+        i.isDefault = false
+    })
+    item.isDefault = true
+}
 </script>
 
 <template>
@@ -114,6 +127,24 @@ const curAddress = computed(() => {
         </div>
     </div>
     <!-- 切换地址 -->
+    <el-dialog title="切换收货地址" width="30%" center v-model="toggleFlag">
+        <div class="addressWrapper">
+            <div class="text item" :class="{ active: item.isDefault }" v-for="item in checkInfo.userAddresses"
+                :key="item.id" @click="switchUserAddresses(item)">
+                <ul>
+                    <li><span>收<i />货<i />人:</span>{{ item.receiver }} </li>
+                    <li><span>联系方式:</span>{{ item.contact }}</li>
+                    <li><span>收货地址:</span>{{ item.fullLocation + item.address }}</li>
+                </ul>
+            </div>
+        </div>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button>取消</el-button>
+                <el-button type="primary" @click="toggleFlag = false">确定</el-button>
+            </span>
+        </template>
+    </el-dialog>
     <!-- 添加地址 -->
 </template>
 
