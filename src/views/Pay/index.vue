@@ -1,20 +1,73 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { getOrderAPI } from '@/apis/pay';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useTimeoutPoll } from '@vueuse/core'
+
+
 const route = useRoute();
 const orderId = route.query.id;
 const payInfo = ref({})
 
 
-// 获取订单信息
+// 1. 获取订单信息
 const getOrderInfo = async (id) => {
     let result = await getOrderAPI(id)
     payInfo.value = result.data.result
 }
+
+
 onMounted(() => {
     getOrderInfo(orderId)
 })
+// 2. 处理订单剩余时间
+// 剩余时间
+const remainingTime = ref('')
+
+const timeoutPoll = {}
+watch(payInfo, () => {
+    if (payInfo.value?.countdown) {
+        const { pause, resume } = useTimeoutPoll(fetchData, 1000)
+        timeoutPoll.pause = pause
+        timeoutPoll.resume = resume
+        timeoutPoll.resume()
+    }
+})
+const count = ref(0)
+function fetchData() {
+    // 调用方法将payInfo.value?.countdown转为秒数 并且减去count(也就是已经过了几秒)得到的剩余的秒数再转换成时分秒
+    count.value++
+    let remainingSeconds = payInfo.value.countdown - count.value
+    if (remainingSeconds <= 0) {
+        timeoutPoll.pause()
+    }
+    remainingTime.value = formatSeconds(remainingSeconds)
+}
+// 将秒转为xx分xx秒的格式的方法
+// 将秒转为xx分xx秒的格式的方法
+function formatSeconds(value) {
+    let theTime = parseInt(value) // 秒
+    let theTime1 = 0 // 分
+    let theTime2 = 0 // 小时
+    // alert(theTime)
+    if (theTime > 60) {
+        theTime1 = parseInt(theTime / 60)
+        theTime = parseInt(theTime % 60)
+        // alert(theTime1+"-"+theTime);
+        if (theTime1 > 60) {
+            theTime2 = parseInt(theTime1 / 60)
+            theTime1 = parseInt(theTime1 % 60)
+        }
+    }
+    let result = '' + parseInt(theTime) + '秒'
+    if (theTime1 > 0) {
+        result = '' + parseInt(theTime1) + '分' + result
+    }
+    if (theTime2 > 0) {
+        result = '' + parseInt(theTime2) + '小时' + result
+    }
+    return result
+}
 </script>
 
 
@@ -26,7 +79,7 @@ onMounted(() => {
                 <span class="icon iconfont icon-queren2"></span>
                 <div class="tip">
                     <p>订单提交成功!请尽快完成支付.</p>
-                    <p>支付还剩 <span>24分30秒</span>, 超时后将取消订单</p>
+                    <p>支付还剩 <span>{{ remainingTime }}</span>, 超时后将取消订单</p>
                 </div>
                 <div class="amount">
                     <span>应付总额:</span>
