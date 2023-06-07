@@ -31,11 +31,22 @@ const getOrderList = async () => {
 onMounted(() => {
     getOrderList()
 })
+
+// tab切换
+const tabChange = async (type) => {
+    // 发请求获取新的订单列表
+    let result = await getUserOrder({
+        orderState: type,
+        page: 1,
+        pageSize: 2
+    })
+    orderList.value = result.data.result.items
+}
 </script>
 
 <template>
     <div class="order-container">
-        <el-tabs>
+        <el-tabs @tab-change="tabChange">
             <!-- tab切换 -->
             <el-tab-pane v-for="item in tabTypes" :key="item.name" :label="item.label" />
 
