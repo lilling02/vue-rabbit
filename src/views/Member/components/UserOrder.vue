@@ -18,29 +18,41 @@ const tabTypes = [
 // 订单列表
 const orderList = ref([])
 
+// 订单的总量
+const counts = ref(0)
+
 // 获取订单接口
+let parmar = ref({})
+
 const getOrderList = async () => {
-    const res = await getUserOrder({
-        orderState: 0,
-        page: 1,
-        pageSize: 2
-    })
+    const res = await getUserOrder(parmar.value)
     orderList.value = res.data.result.items
+    counts.value = res.data.result.counts
 }
 
 onMounted(() => {
+    parmar.value = {
+        orderState: 0,
+        page: 1,
+        pageSize: 2
+    }
     getOrderList()
 })
 
 // tab切换
 const tabChange = async (type) => {
-    // 发请求获取新的订单列表
-    let result = await getUserOrder({
+    parmar.value = {
         orderState: type,
         page: 1,
         pageSize: 2
-    })
-    orderList.value = result.data.result.items
+    }
+    getOrderList()
+}
+
+// 分页切换时候的回调
+const currentChange = (page) => {
+    parmar.value.page = page
+    getOrderList()
 }
 </script>
 
@@ -123,7 +135,8 @@ const tabChange = async (type) => {
                     </div>
                     <!-- 分页 -->
                     <div class="pagination-container">
-                        <el-pagination background layout="prev, pager, next" />
+                        <el-pagination background layout="prev, pager, next" :total="counts" :page-size="parmar.pageSize"
+                            @current-change="currentChange" />
                     </div>
                 </div>
             </div>
