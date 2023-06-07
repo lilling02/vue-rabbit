@@ -61,11 +61,11 @@ const router = createRouter({
         component: PayBack
       },
       {
-        path: 'Member',
+        path: 'member',
         component: Member,
         children: [
           {
-            path: 'user',
+            path: '/member/:user?',
             component: UserInfo
           },
           {
