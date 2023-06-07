@@ -1,16 +1,22 @@
 <script setup>
-defineProps({
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+const props = defineProps({
     good: {
         type: Object,
         required: true
     }
 })
 
+const toDetail = () => {
+    router.push({ path: `/detail/${props.good.id}` })
+}
 </script>
 
 <template>
     <!-- 这一个li 就是一个商品详情,值得封装一下 -->
-    <RouterLink to="/" class="goods-item">
+    <RouterLink to="/" class="goods-item" @click="toDetail">
         <!-- 这一个li 就是一个商品详情,值得封装一下 -->
         <img v-img-lazy="good.picture" alt="" />
         <p class="name ellipsis">{{ good.name }}</p>
